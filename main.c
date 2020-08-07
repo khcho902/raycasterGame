@@ -100,6 +100,7 @@ void drawRays2D()
 		if(disH<disV){ rx=hx; ry=hy; disT=disH;}
 		glColor3f(1,0,0); glLineWidth(3); glBegin(GL_LINES); glVertex2i(px,py); glVertex2i(rx,ry); glEnd();
 		// ---Draw 3D Walls ---
+		float ca=pa-ra; if(ca<0){ca+=2*PI;} if(ca>2*PI) {ca-=2*PI;} disT=disT*cos(ca); //fix fisheye
 		float lineH = (mapS*320)/disT; if(lineH>320) {lineH=320;}				// line height 
 		float lineO=160-lineH/2;												// line offset
 		glLineWidth(8); glBegin(GL_LINES); glVertex2i(r*8+530,lineO); glVertex2i(r*8+530,lineH+lineO);glEnd();
