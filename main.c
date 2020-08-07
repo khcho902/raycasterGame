@@ -29,11 +29,11 @@ int mapX=8, mapY=8, mapS=64;
 int map[] =
 {
 	1, 1, 1, 1, 1, 1, 1, 1,
-	1, 0, 1, 0, 0, 0, 0, 1,
-	1, 0, 1, 0, 0, 0, 0, 1,
-	1, 0, 1, 0, 0, 0, 0, 1,
 	1, 0, 0, 0, 0, 0, 0, 1,
-	1, 0, 0, 0, 0, 1, 0, 1,
+	1, 0, 2, 0, 1, 1, 1, 1,
+	1, 1, 0, 0, 1, 0, 0, 1,
+	1, 0, 0, 0, 0, 0, 0, 1,
+	1, 0, 0, 0, 0, 0, 0, 1,
 	1, 0, 0, 0, 0, 0, 0, 1,
 	1, 1, 1, 1, 1, 1, 1, 1,
 };
@@ -45,7 +45,7 @@ void drawMap2D()
 	{
 		for(x=0; x<mapX; x++)
 		{
-			if(map[y*mapX+x]==1) { glColor3f(1,1,1);} else { glColor3f(0,0,0);}
+			if(map[y*mapX+x]!=0) { glColor3f(1,1,1);} else { glColor3f(0,0,0);}
 			xo=x*mapS; yo=y*mapS;
 			glBegin(GL_QUADS);
 			glVertex2i(xo     +1, yo     +1);
@@ -76,10 +76,11 @@ void drawRays2D()
 		if(ra>PI) { ry=(((int)py>>6)<<6)-0.0001; rx=(py-ry)*aTan+px; yo=-64; xo=-yo*aTan; } //looking up
 		if(ra<PI) { ry=(((int)py>>6)<<6)+64;     rx=(py-ry)*aTan+px; yo= 64; xo=-yo*aTan; } //looking down
 		if(ra==0 || ra==PI) { rx=px; ry=py; dof=8; } // looking straight left or right 
+		int mv=0, mh=0;
 		while(dof < 8)
 		{
 			mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-			if(mp>0 && mp<mapX*mapY && map[mp] == 1) {hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=8;} //hit wall
+			if(mp>0 && mp<mapX*mapY && map[mp] > 0) {mh=map[mp]; hx=rx; hy=ry; disH=dist(px,py,hx,hy,ra); dof=8;} //hit wall
 			else {rx+=xo; ry+=yo; dof+=1;} //next line
 		}
 
@@ -93,11 +94,11 @@ void drawRays2D()
 		while(dof < 8)
 		{
 			mx=(int)(rx)>>6; my=(int)(ry)>>6; mp=my*mapX+mx;
-			if(mp>0 && mp<mapX*mapY && map[mp] == 1) {vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //hit wall
+			if(mp>0 && mp<mapX*mapY && map[mp] > 0) {mv=map[mp]; vx=rx; vy=ry; disV=dist(px,py,vx,vy,ra); dof=8;} //hit wall
 			else {rx+=xo; ry+=yo; dof+=1;} //next line
 		}
-		if(disV<disH){ rx=vx; ry=vy; disT=disV; glColor3f(0.9,0,0);}   // vertical   wall hit
-		if(disH<disV){ rx=hx; ry=hy; disT=disH; glColor3f(0.7,0,0);}   // horizontal wall hit
+		if(disV<disH){ rx=vx; ry=vy; disT=disV; glColor3f(0.9,0,0); if(mv==2){glColor3f(0,0,0.7);}}   // vertical   wall hit
+		if(disH<disV){ rx=hx; ry=hy; disT=disH; glColor3f(0.7,0,0); if(mh==2){glColor3f(0,0,0.4);}}   // horizontal wall hit
 		glLineWidth(3); glBegin(GL_LINES); glVertex2i(px,py); glVertex2i(rx,ry); glEnd();
 		// ---Draw 3D Walls ---
 		float ca=pa-ra; if(ca<0){ca+=2*PI;} if(ca>2*PI) {ca-=2*PI;} disT=disT*cos(ca); //fix fisheye
