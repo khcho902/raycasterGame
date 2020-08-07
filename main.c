@@ -62,7 +62,7 @@ void drawRays3D()
 	ra=pa;
 	for(r=0; r<1; r++) 
 	{
-		/*
+		
 		// ---Check Horizontal Lines----
 		dof=0;
 		float aTan=-1/tan(ra);
@@ -76,12 +76,12 @@ void drawRays3D()
 			else {rx+=xo; ry+=yo; dof+=1;} //next line
 		}
 		glColor3f(0,1,0);
-		glLineWidth(1);
+		glLineWidth(10);
 		glBegin(GL_LINES);
 		glVertex2i(px,py);
 		glVertex2i(rx,ry);
 		glEnd();
-		*/
+		
 
 		// ---Check Vertical Lines----
 		dof=0;
@@ -96,7 +96,7 @@ void drawRays3D()
 			else {rx+=xo; ry+=yo; dof+=1;} //next line
 		}
 		glColor3f(1,0,0);
-		glLineWidth(1);
+		glLineWidth(3);
 		glBegin(GL_LINES);
 		glVertex2i(px,py);
 		glVertex2i(rx,ry);
