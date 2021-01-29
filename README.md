@@ -3,5 +3,5 @@
 run command
 ```
 make
-.a.out
+./a.out
 ```
